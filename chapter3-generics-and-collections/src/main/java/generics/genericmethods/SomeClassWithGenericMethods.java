@@ -1,6 +1,6 @@
 package generics.genericmethods;
 
-public class SomeClassWithGenericObjects {
+public class SomeClassWithGenericMethods {
 
 	public <T> T getTheObject1(T t) {
 		return t;
@@ -32,5 +32,13 @@ public class SomeClassWithGenericObjects {
 
 	public <T, R, U, X, Y, Z> R getTheObject6(T t, R r) {
 		return r;
+	}
+
+	public <T extends Animal> Animal doStuff(T t){
+		return new Animal();
+	}
+
+	public <T extends Number> T doStuff2(Crate<T> crate) {
+		return crate.getContent();
 	}
 }
