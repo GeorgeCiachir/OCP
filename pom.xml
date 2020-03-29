@@ -17,7 +17,8 @@
 		<module>chapter1-advanced-class-design</module>
 		<module>chapter2-design-patterns-and-principles</module>
 		<module>chapter3-generics-and-collections</module>
-	</modules>
+        <module>chapter4-functional-programming</module>
+    </modules>
 
 
 	<build>
