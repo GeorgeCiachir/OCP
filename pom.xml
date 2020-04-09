@@ -21,6 +21,7 @@
         <module>chapter5-dates-strings-and-localization</module>
         <module>chapter6-exceptions-and-assertions</module>
         <module>chapter7-concurrency</module>
+        <module>chapter8-io</module>
     </modules>
 
 
