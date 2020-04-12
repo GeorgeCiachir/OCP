@@ -22,6 +22,7 @@
         <module>chapter6-exceptions-and-assertions</module>
         <module>chapter7-concurrency</module>
         <module>chapter8-io</module>
+        <module>chapter9-nio2</module>
     </modules>
 
 
