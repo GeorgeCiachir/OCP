@@ -29,3 +29,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### the Derby database for chapter 10 ###
+zoodb/
+derby.log
