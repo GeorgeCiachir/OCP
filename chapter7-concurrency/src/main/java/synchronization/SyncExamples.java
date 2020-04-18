@@ -66,10 +66,25 @@ public class SyncExamples {
 //        oneMethodSyncAnotherUnsyncExample();
 //        twoMethodsSyncOnTheSameInstanceExample();
 //        twoMethodsSyncOnDifferentInstancesExample();
-        twoMethodsSyncOnClassNameEvenThoughDifferentInstances();
-
+//        twoMethodsSyncOnClassNameEvenThoughDifferentInstances();
+        waitMethodOnANonMonitor();
     }
 
+    /**
+     * @see IllegalMonitorStateException
+     * @see Object#wait(long timeout)
+     * <p>
+     * Remember that an object becomes a monitor only if in a synchronized block
+     * If the object is not a monitor at the time the wait method is called, an IllegalMonitorStateException is thrown
+     */
+    private static void waitMethodOnANonMonitor() {
+        Object o = new Object();
+        try {
+            o.wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
      * The execution is synced because even though the methods are called from different instances
