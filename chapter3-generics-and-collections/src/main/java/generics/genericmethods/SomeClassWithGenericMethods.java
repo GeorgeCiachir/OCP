@@ -41,4 +41,10 @@ public class SomeClassWithGenericMethods {
 	public <T extends Number> T doStuff2(Crate<T> crate) {
 		return crate.getContent();
 	}
+
+    public <T extends Number> T doStuff3(Crate<? extends T> crate) {
+        return crate.getContent();
+    }
+
+    <T> void foo(){}
 }

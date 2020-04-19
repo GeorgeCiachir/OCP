@@ -19,5 +19,34 @@ public class ListExamples {
 
         List<Integer> integers = Arrays.stream(intArray).boxed().collect(toList());
         System.out.println(Collections.binarySearch(integers, -2));
+
+        SomeClass[] elements = {new SomeClass(2), new SomeClass(1), new SomeClass(3)};
+        SomeClass someClass = new SomeClass(2);
+        System.out.println(Arrays.binarySearch(elements, someClass)); //ClassCastException: collections.list.SomeClass cannot be cast to java.lang.Comparable
+    }
+
+}
+
+class SomeClass {
+
+    private int value;
+
+    SomeClass(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SomeClass someClass = (SomeClass) o;
+
+        return value == someClass.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
     }
 }

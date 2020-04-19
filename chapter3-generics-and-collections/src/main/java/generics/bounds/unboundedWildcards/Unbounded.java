@@ -5,43 +5,29 @@ import java.util.List;
 
 public class Unbounded {
 
-	private void printTheListWorks1(List<?> objects) {
-		for (Object o : objects) {
-			System.out.println(o);
-		}
-	}
+    public static void main(String[] args) {
+        List<Animal> animals = new ArrayList<>();
+        animals.add(new Animal("Alex"));
+        animals.add(new Animal("Michael"));
 
-	private <T> void printTheListWorks3(List<T> objects) {
-		for (Object o : objects) {
-			System.out.println(o);
-		}
-	}
+        takesUnboundedList(animals);
+        takesRawList(animals);
+        logicallyImmutableList();
+    }
 
-	private void printTheListWorks2(List objects) {
-		for (Object o : objects) {
-			System.out.println(o);
-		}
-	}
+    private static void takesUnboundedList(List<?> objects) {
+        objects.forEach(System.out::println);
+    }
 
+    private static void takesRawList(List objects) {
+        objects.forEach(System.out::println);
+    }
 
-	private void printTheListDoesNotCompile(List<Object> objects) {
-		for (Object o : objects) {
-			System.out.println(o);
-		}
-	}
+    private static void logicallyImmutableList() {
+        List<?> elements = new ArrayList<>();
+        // elements.add(new Object());//does not compile
 
-	public static void main(String[] args) {
-		List<Animal> animals = new ArrayList<>();
-		Animal a1 = new Animal("Gigel");
-		Animal a2 = new Animal("Gogu");
-		animals.add(a1);
-		animals.add(a2);
-
-		Unbounded unbounded = new Unbounded();
-		unbounded.printTheListWorks1(animals);
-		unbounded.printTheListWorks2(animals);
-		unbounded.printTheListWorks3(animals);
-//		unbounded.printTheListDoesNotCompile(animals);
-	}
-
+        // The elements list is logically immutable -> same explanation as for the upper bounds
+        // It's like List<? extends Object> -> could be anything
+    }
 }

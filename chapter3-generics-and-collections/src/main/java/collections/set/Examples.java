@@ -34,7 +34,10 @@ public class Examples {
 
         System.out.println("*************************************");
 
-        //ClassCastException at runtime
+        // In the case of TreeSet:
+        //      - The objects in the set must either implement Comparable or be naturally comparable
+        //      - or a Comparator must provided on the Set's constructor
+        // Otherwise, a ClassCastException is thrown: java.lang.Object cannot be cast to java.lang.Comparable
         Set<Object> elements = new TreeSet<>();
         elements.add(new Object());
         elements.add(new Object());

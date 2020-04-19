@@ -1,106 +1,63 @@
 package generics.bounds.upperBoundedWildcards;
 
-import generics.bounds.unboundedWildcards.Animal;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public class UpperBounded {
 
-	private void printTheListWorks1(List<Animal> objects) {
-		for (Object o : objects) {
-			System.out.println(o);
-		}
-	}
+    public static void main(String[] args) {
 
-	private void printTheListWorks2(List<? extends Animal> objects) {
-		for (Object o : objects) {
-			System.out.println(o);
-		}
-	}
+        List<Bird> birds = asList(new Bird("Alex"), new Sparrow("a sparrow"), new Stork("a stork"));
+        List<Sparrow> sparrows = singletonList(new Sparrow("a sparrow"));
+        List<Stork> storks = singletonList(new Stork("a stork"));
+        printBirdsAndDescendents(birds);
+        printBirdsAndDescendents(sparrows);
+        printBirdsAndDescendents(storks);
 
+        List<Integer> numbers = asList(1, 2);
+        calculateTotal(numbers);
 
-	private void printTheListWorks3(List<? extends Object> objects) {
-		for (Object o : objects) {
-			System.out.println(o);
-		}
-	}
+        logicallyImmutableList();
+    }
 
-
-	private long total1(List<? extends Number> numbers) {
-		long total = 0;
-		for (Number number : numbers) {
-			total += number.longValue();
-		}
-
-		return total;
-	}
-
-	private long total2(List numbers) {
-		long total = 0;
-		for (Object number : numbers) {
-			Number n = (Number) number;
-			total += n.longValue();
-		}
-
-		return total;
-	}
-
-	public static void main(String[] args) {
-		List<Animal> animals = new ArrayList<>();
-		Animal a1 = new Animal("Gigel");
-		Animal a2 = new Animal("Gogu");
-		animals.add(a1);
-		animals.add(a2);
-
-		UpperBounded upperBounded = new UpperBounded();
-		upperBounded.printTheListWorks1(animals);
-		upperBounded.printTheListWorks2(animals);
-		upperBounded.printTheListWorks3(animals);
-
-		List<Integer> numbers = new ArrayList<>();
-		numbers.add(1);
-		numbers.add(2);
-		System.out.println(upperBounded.total1(numbers));
-		System.out.println(upperBounded.total2(numbers));
-
-
-		List<? extends Bird> logicallyImmutableBirds = new ArrayList<>();
-		// The following lines do not compile because from Java's perspective, List<? extends Bird> could be List<Sparrow> and we can't add
-		// a random Bird (that could actually be an instance of a Stork), to the Sparrow list
-		// Basically, Java prevents a ClassCastException
-		// At this point, the birds list has become logically immutable (elements cannot be added and there are no elements to remove),
-		// unless we pass a collection of birds at creation, using the constructor (this would mean that we can now remove elements)
+    private static void logicallyImmutableList() {
+        List<? extends Bird> logicallyImmutableBirds = new ArrayList<>();
+        // The following lines do not compile because from Java's perspective, List<? extends Bird> could be List<Sparrow> and we can't add
+        // a random Bird (that could actually be an instance of a Stork), to the Sparrow list
+        // Basically, Java prevents a ClassCastException
+        // At this point, the birds list has become logically immutable (elements cannot be added and there are no elements to remove),
+        // unless we pass a collection of birds at creation, using the constructor (this would mean that we could now at least remove elements)
+//		logicallyImmutableBirds.add(new Bird());
 //		logicallyImmutableBirds.add(new Sparrow());
 //		logicallyImmutableBirds.add(new Stork());
-//		logicallyImmutableBirds.add(new Bird());
 
+        // This is a bad idea. It is in fact exactly what Java tries to prevent by making the list logically immutable
+        List<Bird> randomBirds = new ArrayList<>();
+        randomBirds.add(new Bird("random bird"));
+        randomBirds.add(new Sparrow("random sparrow"));
+        randomBirds.add(new Stork("random stork"));
+        randomBirds.addAll(singletonList(new Sparrow("a sparrow")));
+        randomBirds.addAll(singletonList(new Stork("a stork")));
 
+        logicallyImmutableBirds = new ArrayList<>(randomBirds);
+        System.out.println(logicallyImmutableBirds.get(4).getClass());
+        Sparrow failingSparrowCast = (Sparrow) logicallyImmutableBirds.get(4); //This throws ClassCastException: Stork cannot be cast to Sparrow
+    }
 
+    private static void printBirdsAndDescendents(List<? extends Bird> birds) {
+        for (Bird bi : birds) {
+            System.out.println(bi);
+        }
+    }
 
-		List<Sparrow> sparrows = new ArrayList<>();
-		sparrows.add(new Sparrow("a sparrow"));
+    private static void calculateTotal(List<? extends Number> numbers) {
+        long sum = numbers.stream()
+                .mapToLong(Number::longValue)
+                .sum();
 
-		List<Stork> storks = new ArrayList<>();
-		storks.add(new Stork("a stork"));
-
-		// This is actually another bad idea. It is in fact exactly what Java tries to prevent by making the
-		// list logically immutable
-		List<Bird> randomBirds = new ArrayList<>();
-		randomBirds.add(new Bird("random bird"));
-		randomBirds.add(new Sparrow("random sparrow"));
-		randomBirds.add(new Stork("random stork"));
-		randomBirds.addAll(sparrows);
-		randomBirds.addAll(storks);
-
-		List<? extends Bird> birds = new ArrayList<>(randomBirds);
-		System.out.println(birds);
-		birds.remove(4);
-		System.out.println(birds);
-
-		System.out.println(birds.get(3).getClass());
-		Stork failingStorkCast = (Stork) birds.get(3); //This throws ClassCastException
-
-	}
+        System.out.println(sum);
+    }
 }

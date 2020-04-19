@@ -1,10 +1,10 @@
-package collections.comparisons.comparable;
+package collections.comparisons;
 
 public class ComparableAnimal implements Comparable {
 
-    private int id;
-    private String name;
-    private int age;
+    private final int id;
+    private final String name;
+    private final int age;
 
     public ComparableAnimal(int id, String name, int age) {
         this.id = id;
