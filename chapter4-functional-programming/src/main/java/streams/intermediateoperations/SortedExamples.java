@@ -8,106 +8,98 @@ import java.util.List;
 public class SortedExamples {
 
     public static void main(String[] args) {
-        SortedExamples examples = new SortedExamples();
-//        examples.firstMethodSignature();
-//        examples.secondMethodSignatureTakesAComparator();
-        examples.usingParallelStreamsAndSorted();
+        simpleSort();
+        sortUsingComparators();
+        sortingParallelStreams();
     }
 
-    private void firstMethodSignature() {
-        getListOfSomethingThatImplementsComparable().stream()
+    private static void simpleSort() {
+        getComparableObjects().stream()
                 .sorted()
                 .forEach(System.out::print);
 
-        getListOfSomethingThatDoesNotImplementComparable().stream()
+        getNonComparableObjects().stream()
                 // ClassCastException: streams.intermediateoperations.SomethingThatDoesNotImplementComparable cannot be cast to java.lang.Comparable
                 // This also happens on Collections.sort() if the elements do not implement Comparable or the Comparator is not provided
                 .sorted()
                 .forEach(System.out::print);
     }
 
-    private void secondMethodSignatureTakesAComparator() {
-        getListOfSomethingThatImplementsComparable().stream()
-                .sorted((x, y) -> y.getI() - x.getI())
-                .sorted(Comparator.comparingInt(SomethingThatImplementsComparable::getI).reversed())
+    private static void sortUsingComparators() {
+        getComparableObjects().stream()
+                .sorted((x, y) -> y.getId() - x.getId())
+                .sorted(Comparator.comparingInt(ComparableObject::getId).reversed())
                 .sorted(Comparator.reverseOrder())
                 .sorted(Collections.reverseOrder())
-                .sorted(this.reverseOrderComparator())
+                .sorted(reverseOrderComparator())
 //                .sorted(Comparator::reverseOrder)
                 .forEach(System.out::print);
     }
 
-    private void usingParallelStreamsAndSorted() {
-        getListOfSomethingThatImplementsComparable().parallelStream()
-                .sorted((x ,y) -> {
-                    System.out.println("comparing " + x + " and " + y);
-                    return x.compareTo(y);
-                })
-                .forEach(element -> System.out.print("element " + element + " ; "));
-
-        System.out.println();
-
-        getListOfSomethingThatImplementsComparable().stream()
+    private static void sortingParallelStreams() {
+        getComparableObjects()
+                .parallelStream()
                 .sorted()
                 .forEach(element -> System.out.print("element " + element + " ; "));
     }
 
-    private List<SomethingThatImplementsComparable> getListOfSomethingThatImplementsComparable() {
-        return Arrays.asList(new SomethingThatImplementsComparable(9), new SomethingThatImplementsComparable(15),
-                new SomethingThatImplementsComparable(8), new SomethingThatImplementsComparable(1),
-                new SomethingThatImplementsComparable(3), new SomethingThatImplementsComparable(2));
+    private static List<ComparableObject> getComparableObjects() {
+        return Arrays.asList(
+                new ComparableObject(9), new ComparableObject(15),
+                new ComparableObject(8), new ComparableObject(1),
+                new ComparableObject(3), new ComparableObject(2));
     }
 
-    private List<SomethingThatDoesNotImplementComparable> getListOfSomethingThatDoesNotImplementComparable() {
-        return Arrays.asList(new SomethingThatDoesNotImplementComparable(9), new SomethingThatDoesNotImplementComparable(15),
-                new SomethingThatDoesNotImplementComparable(8), new SomethingThatDoesNotImplementComparable(1),
-                new SomethingThatDoesNotImplementComparable(3), new SomethingThatDoesNotImplementComparable(2));
+    private static List<NonComparableObject> getNonComparableObjects() {
+        return Arrays.asList(
+                new NonComparableObject(9), new NonComparableObject(15),
+                new NonComparableObject(8), new NonComparableObject(1),
+                new NonComparableObject(3), new NonComparableObject(2));
     }
 
-    private <T extends Comparable<T>> Comparator<T> reverseOrderComparator() {
+    private static <T extends Comparable<T>> Comparator<T> reverseOrderComparator() {
 
         return (x, y) -> y.compareTo(x);
     }
 }
 
+class ComparableObject implements Comparable<ComparableObject> {
 
-class SomethingThatImplementsComparable implements Comparable<SomethingThatImplementsComparable> {
+    private final int id;
 
-    private int i;
-
-    SomethingThatImplementsComparable(int i) {
-        this.i = i;
+    ComparableObject(int id) {
+        this.id = id;
     }
 
     @Override
-    public int compareTo(SomethingThatImplementsComparable other) {
-        return this.getI() - other.getI();
+    public int compareTo(ComparableObject other) {
+        return this.getId() - other.getId();
     }
 
     @Override
     public String toString() {
-        return "" + i;
+        return "" + id;
     }
 
-    int getI() {
-        return i;
+    int getId() {
+        return id;
     }
 }
 
-class SomethingThatDoesNotImplementComparable {
+class NonComparableObject {
 
-    private int i;
+    private final int id;
 
-    SomethingThatDoesNotImplementComparable(int i) {
-        this.i = i;
+    NonComparableObject(int id) {
+        this.id = id;
     }
 
     @Override
     public String toString() {
-        return "" + i;
+        return "" + id;
     }
 
-    int getI() {
-        return i;
+    int getId() {
+        return id;
     }
 }

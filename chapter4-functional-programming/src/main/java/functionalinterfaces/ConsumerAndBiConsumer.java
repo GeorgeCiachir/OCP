@@ -1,13 +1,13 @@
-package functionalinterfaces.consumerandbiconsumer;
+package functionalinterfaces;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class Examples {
+public class ConsumerAndBiConsumer {
 
     public static void main(String[] args) {
-        Examples examples = new Examples();
+        ConsumerAndBiConsumer consumerAndBiConsumer = new ConsumerAndBiConsumer();
 
         Map<Integer, Integer> initial = new HashMap<>();
         initial.put(1, 1);
@@ -27,7 +27,7 @@ public class Examples {
         BiConsumer<Integer, Integer> anotherBiConsumer = (k, v) -> anotherNewMap.put(k, v);
 
         System.out.println(anotherNewMap);
-        initial.forEach((k, v) -> examples.add(k, v, anotherBiConsumer));
+        initial.forEach((k, v) -> consumerAndBiConsumer.add(k, v, anotherBiConsumer));
         System.out.println(anotherNewMap);
 
     }

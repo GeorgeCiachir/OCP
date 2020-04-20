@@ -5,15 +5,14 @@ import java.util.stream.Stream;
 public class DistinctExamples {
 
     public static void main(String[] args) {
-        DistinctExamples examples = new DistinctExamples();
-        examples.runExamples();
+        distinct();
     }
 
     /*
-     * Removes duplicates
-     * It calls equals() on the objects
+     * calls equals() on the objects
      */
-    private void runExamples() {
+    private  static void distinct() {
+
         Stream.of("first", "first", "second", "third", "first", "fourth")
                 .distinct()
                 .forEach(System.out::println);

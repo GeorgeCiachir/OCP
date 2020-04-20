@@ -1,8 +1,8 @@
-package functionalinterfaces.predicateandbipredicate;
+package functionalinterfaces;
 
 import java.util.function.Predicate;
 
-public class Examples {
+public class PredicateAndBiPredicate {
 
     private static final String EGG = "egg";
     private static final String BROWN = "brown";

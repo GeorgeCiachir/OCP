@@ -12,7 +12,7 @@ import java.util.stream.Collector;
 
 public class MyCollectors {
 
-    public static <T> Collector<T, ?, List<T>> toListUsingMyCollector() {
+    public static <T> Collector<T, ?, List<T>> standardToListUsingMyCollector() {
         Supplier<List<T>> listSupplier = ArrayList::new;
         BiConsumer<List<T>, T> howToAccumulate = List::add;
         BinaryOperator<List<T>> howToCombineForParallelStreams = (firstList, secondList) -> {
@@ -20,6 +20,12 @@ public class MyCollectors {
             return firstList;
         };
 
+        return new CustomCollector<>(listSupplier, howToAccumulate, howToCombineForParallelStreams);
+    }
+
+    public static <T> Collector<T, ?, List<T>> toListUsingMyCollector(Supplier<List<T>> listSupplier,
+                                                                      BiConsumer<List<T>, T> howToAccumulate,
+                                                                      BinaryOperator<List<T>> howToCombineForParallelStreams) {
         return new CustomCollector<>(listSupplier, howToAccumulate, howToCombineForParallelStreams);
     }
 
@@ -33,8 +39,8 @@ class CustomCollector<T, A, R> implements Collector<T, A, R> {
     private final BinaryOperator<A> howToCombineForParallelStreams;
 
     CustomCollector(Supplier<A> whereToCollect,
-                            BiConsumer<A, T> howToAccumulate,
-                            BinaryOperator<A> howToCombineForParallelStreams) {
+                    BiConsumer<A, T> howToAccumulate,
+                    BinaryOperator<A> howToCombineForParallelStreams) {
         this.whereToCollect = whereToCollect;
         this.howToAccumulate = howToAccumulate;
         this.howToCombineForParallelStreams = howToCombineForParallelStreams;
