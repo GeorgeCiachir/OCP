@@ -47,20 +47,20 @@ public class WorkingWithPeriodsExamples {
         System.out.println("****************");
         System.out.println();
         System.out.println("Period");
-
-        System.out.println(Period.ofYears(1).plusDays(33));
-        System.out.println(Period.ofWeeks(49));
+        System.out.println(Period.ofYears(1).plusMonths(2).plusDays(33));
+        System.out.println(Period.ofWeeks(52).plusDays(2));
 
         System.out.println();
         System.out.println("****************");
         System.out.println();
         System.out.println("Duration");
 
-        System.out.println(Duration.ofDays(2));
+        System.out.println(Duration.ofDays(2).plusHours(2).plusMinutes(9).plusSeconds(2).plusMillis(3).plusNanos(3));
         System.out.println(Duration.ofHours(9));
         System.out.println(Duration.ofMinutes(8));
         System.out.println(Duration.ofSeconds(22));
         System.out.println(Duration.ofMillis(2));
+        System.out.println(Duration.ofNanos(2));
 
         System.out.println(ZonedDateTime.now().toInstant());
         System.out.println(LocalDateTime.now().toInstant(OffsetDateTime.now().getOffset()));
