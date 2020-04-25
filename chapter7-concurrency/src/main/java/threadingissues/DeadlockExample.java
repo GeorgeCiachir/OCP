@@ -12,17 +12,11 @@ public class DeadlockExample {
         Fox gina = new Fox("Gina");
         Fox tzichi = new Fox("Tzichi");
 
+        ExecutorService service = Executors.newFixedThreadPool(10);
 
-        ExecutorService service = null;
+        service.submit(gina::eatThenDrink);
+        service.submit(tzichi::drinkThenEat);
 
-        try {
-            service = Executors.newFixedThreadPool(10);
-            service.submit(gina::eatThenDrink);
-            service.submit(tzichi::drinkThenEat);
-        } finally {
-            if (service != null) {
-                service.shutdown();
-            }
-        }
+        service.shutdown();
     }
 }

@@ -24,7 +24,24 @@ public class SingleThreadExecutorExamples {
 //        usingCancel();
 //        usingGetWithTimeout();
 
-        throwingExceptions(false);
+//        throwingExceptions(false);
+        test();
+    }
+
+    private static void test() {
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        Runnable runnable = () -> {
+            System.out.println("Entering runnable");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Exiting runnable");
+        };
+
+        service.execute(runnable);
+        service.shutdownNow();
 
 
     }

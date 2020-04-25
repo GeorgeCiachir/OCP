@@ -5,7 +5,17 @@ import java.util.concurrent.Executors;
 
 public class SyncExamples {
 
-    private void firstSyncOnClassNameMethod() throws InterruptedException {
+    private static synchronized void simpleSyncOnClassNameMethod() throws InterruptedException {
+        System.out.println("Simple static sync method; entering thread: " + Thread.currentThread().getName());
+        System.out.println("Simple static sync method acquired lock");
+        Thread.sleep(3000);
+        System.out.println("Simple static sync method releasing lock");
+        System.out.println();
+        System.out.println("*****************************");
+        System.out.println();
+    }
+
+    private void firstManuallySyncOnClassNameMethod() throws InterruptedException {
         synchronized (SyncExamples.class) {
             System.out.println("First method; entering thread: " + Thread.currentThread().getName());
             System.out.println("first method acquired lock");
@@ -17,7 +27,7 @@ public class SyncExamples {
         }
     }
 
-    private void secondSyncOnClassNameMethod() throws InterruptedException {
+    private void secondManuallySyncOnClassNameMethod() throws InterruptedException {
         synchronized (SyncExamples.class) {
             System.out.println("Second method; entering thread: " + Thread.currentThread().getName());
             System.out.println("Second method acquired lock");
@@ -29,8 +39,17 @@ public class SyncExamples {
         }
     }
 
+    private synchronized void simpleSyncMethod() throws InterruptedException {
+        System.out.println("Simple sync method; entering thread: " + Thread.currentThread().getName());
+        System.out.println("Simple sync method acquired lock");
+        Thread.sleep(3000);
+        System.out.println("Simple sync method releasing lock");
+        System.out.println();
+        System.out.println("*****************************");
+        System.out.println();
+    }
 
-    private void firstSyncMethod() throws InterruptedException {
+    private void firstManuallySyncMethod() throws InterruptedException {
         synchronized (this) {
             System.out.println("First method; entering thread: " + Thread.currentThread().getName());
             System.out.println("first method acquired lock");
@@ -42,7 +61,7 @@ public class SyncExamples {
         }
     }
 
-    private void secondSyncMethod() throws InterruptedException {
+    private void secondManuallySyncMethod() throws InterruptedException {
         synchronized (this) {
             System.out.println("Second method; entering thread: " + Thread.currentThread().getName());
             System.out.println("Second method acquired lock");
@@ -62,12 +81,105 @@ public class SyncExamples {
     }
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 //        oneMethodSyncAnotherUnsyncExample();
-//        twoMethodsSyncOnTheSameInstanceExample();
+//        threeMethodsSyncOnTheSameInstanceExample();
 //        twoMethodsSyncOnDifferentInstancesExample();
-//        twoMethodsSyncOnClassNameEvenThoughDifferentInstances();
-        waitMethodOnANonMonitor();
+//        threeMethodsSyncOnClassNameEvenThoughDifferentInstances();
+//        waitMethodOnANonMonitor();
+        becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance();
+    }
+
+    private static void oneMethodSyncAnotherUnsyncExample() {
+        SyncExamples examples = new SyncExamples();
+        ExecutorService service = Executors.newFixedThreadPool(2);
+
+        service.submit(() -> {
+            examples.firstManuallySyncMethod();
+            return 2;
+        });
+
+        service.submit(() -> {
+            examples.unSyncMethod();
+            return 2;
+        });
+
+        service.shutdown();
+    }
+
+    /*
+     * Because the 2 methods sync on the instance, they will execute in sync, one after another
+     * The result is the same if the sync is done manually on the instance object, or using the synchronized keyword on the method's signature
+     */
+    private static void threeMethodsSyncOnTheSameInstanceExample() {
+        SyncExamples examples = new SyncExamples();
+        ExecutorService service = Executors.newFixedThreadPool(3);
+
+        service.submit(() -> {
+            examples.simpleSyncMethod();
+            return 2;
+        });
+
+        service.submit(() -> {
+            examples.firstManuallySyncMethod();
+            return 2;
+        });
+
+        service.submit(() -> {
+            examples.secondManuallySyncMethod();
+            return 2;
+        });
+
+        service.shutdown();
+    }
+
+    /*
+     * This time the methods are synced on different instances, therefore the execution is concurrent
+     */
+    private static void twoMethodsSyncOnDifferentInstancesExample() {
+        ExecutorService service = Executors.newFixedThreadPool(2);
+        SyncExamples firstInstance = new SyncExamples();
+        SyncExamples secondInstance = new SyncExamples();
+
+        service.submit(() -> {
+            firstInstance.firstManuallySyncMethod();
+            return 2;
+        });
+
+        service.submit(() -> {
+            secondInstance.secondManuallySyncMethod();
+            return 2;
+        });
+
+        service.shutdown();
+    }
+
+    /*
+     * The execution is synced because even though the methods are called from different instances
+     * they are synced on the class name, not on the instance
+     */
+    private static void threeMethodsSyncOnClassNameEvenThoughDifferentInstances() {
+        ExecutorService service = Executors.newFixedThreadPool(2);
+        SyncExamples firstInstance = new SyncExamples();
+        SyncExamples secondInstance = new SyncExamples();
+        SyncExamples thirdInstance = new SyncExamples();
+
+        service.submit(() -> {
+            thirdInstance.simpleSyncOnClassNameMethod();
+            return 2;
+        });
+
+        service.submit(() -> {
+            firstInstance.firstManuallySyncOnClassNameMethod();
+            return 2;
+        });
+
+        service.submit(() -> {
+            secondInstance.secondManuallySyncOnClassNameMethod();
+            return 2;
+        });
+
+        service.shutdown();
     }
 
     /**
@@ -87,100 +199,23 @@ public class SyncExamples {
     }
 
     /*
-     * The execution is synced because even though the methods are called from different instances
-     * they are synced on the class name, not on the instance
+     * What I want to say is that in this case, the synchronizations don't interfere
      */
-    private static void twoMethodsSyncOnClassNameEvenThoughDifferentInstances() throws InterruptedException {
-        ExecutorService service;
+    private static void becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance() {
+        ExecutorService service = Executors.newFixedThreadPool(2);
+        SyncExamples firstInstance = new SyncExamples();
+        SyncExamples secondInstance = new SyncExamples();
 
-        SyncExamples examples1 = new SyncExamples();
-        service = Executors.newSingleThreadExecutor();
         service.submit(() -> {
-            examples1.firstSyncOnClassNameMethod();
+            firstInstance.simpleSyncOnClassNameMethod();
             return 2;
         });
-        service.shutdown();
 
-        SyncExamples examples2 = new SyncExamples();
-        Thread.sleep(100);
-        service = Executors.newSingleThreadExecutor();
         service.submit(() -> {
-            examples2.secondSyncOnClassNameMethod();
+            secondInstance.simpleSyncMethod();
             return 2;
         });
+
         service.shutdown();
-    }
-
-    /*
-     * This time the methods are synced on different instances, therefore the execution is concurrent
-     */
-    private static void twoMethodsSyncOnDifferentInstancesExample() throws InterruptedException {
-        ExecutorService service;
-
-        SyncExamples examples1 = new SyncExamples();
-        service = Executors.newSingleThreadExecutor();
-        service.submit(() -> {
-            examples1.firstSyncMethod();
-            return 2;
-        });
-        service.shutdown();
-
-        SyncExamples examples2 = new SyncExamples();
-        Thread.sleep(100);
-        service = Executors.newSingleThreadExecutor();
-        service.submit(() -> {
-            examples2.secondSyncMethod();
-            return 2;
-        });
-        service.shutdown();
-    }
-
-    /*
-     * Because the 2 methods sync on the instance, they will execute in sync, one after another
-     * The result is the same if the sync is done manually on the instance object, or using the synchronized keyword on the method's signature
-     */
-    private static void twoMethodsSyncOnTheSameInstanceExample() throws InterruptedException {
-        SyncExamples examples = new SyncExamples();
-        ExecutorService service;
-
-        service = Executors.newSingleThreadExecutor();
-        service.submit(() -> {
-            examples.firstSyncMethod();
-            return 2;
-        });
-        service.shutdown();
-
-        Thread.sleep(100);
-        service = Executors.newSingleThreadExecutor();
-        service.submit(() -> {
-            examples.secondSyncMethod();
-            return 2;
-        });
-        service.shutdown();
-
-        examples.secondSyncMethod();
-    }
-
-    private static void oneMethodSyncAnotherUnsyncExample() throws InterruptedException {
-        SyncExamples examples = new SyncExamples();
-        ExecutorService service;
-
-        service = Executors.newSingleThreadExecutor();
-        service.submit(() -> {
-            examples.firstSyncMethod();
-            return 2;
-        });
-        service.shutdown();
-
-        Thread.sleep(100);
-        service = Executors.newSingleThreadExecutor();
-        service.submit(() -> {
-            examples.unSyncMethod();
-            return 2;
-        });
-        service.shutdown();
-
-
-        examples.unSyncMethod();
     }
 }

@@ -11,34 +11,30 @@ public class Fox {
         this.name = name;
     }
 
-    private void move() {
-        System.out.println(name + " going to the other bowl");
+    private void goToTheOtherBowl() {
+        System.out.println(name + " going to the other bowl. It will take approx. 100 ms");
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void eatThenDrink()  {
+    public void eatThenDrink() {
         synchronized (FOOD) {
             System.out.println(name + " eating");
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            move();
+
+            goToTheOtherBowl();
             synchronized (WATER) {
                 System.out.println(name + " drinking");
             }
         }
     }
 
-    public void drinkThenEat()  {
+    public void drinkThenEat() {
         synchronized (WATER) {
             System.out.println(name + " drinking");
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            move();
+            goToTheOtherBowl();
             synchronized (FOOD) {
                 System.out.println(name + " eating");
             }

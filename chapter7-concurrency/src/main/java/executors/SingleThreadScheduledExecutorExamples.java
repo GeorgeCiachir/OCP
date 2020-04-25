@@ -1,5 +1,6 @@
 package executors;
 
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -11,8 +12,37 @@ public class SingleThreadScheduledExecutorExamples {
 
     public static void main(String[] args) throws InterruptedException {
 //        usingSchedule();
-//        usingScheduleAtFixedRate();
-        usingScheduleWithFixedDelay();
+        usingScheduleAtFixedRate();
+//        usingScheduleWithFixedDelay();
+    }
+
+    private static void usingSchedule() {
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        ScheduledFuture<?> scheduledFuture = service.schedule(() -> System.out.println("done"), 2000, TimeUnit.MILLISECONDS);
+        service.shutdown();
+    }
+
+    private static void usingScheduleAtFixedRate() throws InterruptedException {
+        AtomicInteger iteration = new AtomicInteger(0);
+
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        Runnable task = () -> {
+            Random random = new Random();
+            try {
+                if (iteration.get() == 3) {
+                    Thread.sleep(2000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("iteration: " + iteration.getAndIncrement());
+        };
+        service.scheduleAtFixedRate(task, 0, 100, TimeUnit.MILLISECONDS);
+        while (iteration.get() < 10) {
+            Thread.sleep(2000);
+        }
+        System.out.println("shutdown service");
+        service.shutdown();
     }
 
     private static void usingScheduleWithFixedDelay() throws InterruptedException {
@@ -42,25 +72,4 @@ public class SingleThreadScheduledExecutorExamples {
         System.out.println("shutdown service");
         service.shutdown();
     }
-
-    private static void usingScheduleAtFixedRate() throws InterruptedException {
-        AtomicInteger iterationForRunnable = new AtomicInteger(0);
-
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        Runnable task = () -> System.out.println("iteration: " + iterationForRunnable.getAndIncrement());
-        service.scheduleAtFixedRate(task, 0, 100, TimeUnit.MILLISECONDS);
-        while (iterationForRunnable.get() < 10) {
-            Thread.sleep(2000);
-        }
-        System.out.println("shutdown service");
-        service.shutdown();
-    }
-
-    private static void usingSchedule() {
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.schedule(() -> System.out.println("done"), 1000, TimeUnit.MILLISECONDS);
-        service.shutdown();
-    }
-
-
 }
