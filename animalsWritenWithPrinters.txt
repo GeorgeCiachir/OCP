@@ -1,2 +1,3 @@
-Animal [name=Tiger Michael , age=26, type=T, staticValue=staticValue gina, transientValue= transientValue michael]
-Animal [name=Elephant Gina , age=21, type=E, staticValue=staticValue gina, transientValue=transientValue gina]
+Animal [name=Tiger Michael , age=26, type=T]
+Animal [name=Elephant Gina , age=21, type=E]
+null

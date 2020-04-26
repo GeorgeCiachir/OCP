@@ -1,10 +1,12 @@
+package copyingfilecontents;
+
 import java.io.*;
 
 public class InputStreamsAndOutputStreamsExamples {
 
     public static void main(String[] args) throws IOException {
-        readSomeBytes();
-        copyUsingSimpleISAnOS();
+//        readSomeBytes();
+//        copyUsingSimpleISAnOS();
         copyUsingBISAndBOS();
     }
 
@@ -45,11 +47,14 @@ public class InputStreamsAndOutputStreamsExamples {
         }
         secondCopy.createNewFile();
 
-        try (FileInputStream is = new FileInputStream(source);
-             BufferedInputStream bis = new BufferedInputStream(is);
-             OutputStream os = new FileOutputStream(secondCopy);
-             BufferedOutputStream bos = new BufferedOutputStream(os)) {
+        try (FileInputStream fis = new FileInputStream(source);
+             BufferedInputStream bis = new BufferedInputStream(fis);
+             FileOutputStream fos = new FileOutputStream(secondCopy);
+             BufferedOutputStream bos = new BufferedOutputStream(fos)) {
 
+            System.out.println("The source file contains 45 characters of actual data");
+            System.out.println("Including the line ending characters, we have a total of 47 chars");
+            System.out.println("The buffer size is 35");
             byte[] buffer = new byte[35];
             int lengthRead;
 
@@ -57,6 +62,8 @@ public class InputStreamsAndOutputStreamsExamples {
                 System.out.println(lengthRead);
                 bos.write(buffer, 0, lengthRead);
                 bos.flush();
+                System.out.println();
+                System.out.println("Read size: " + lengthRead + " with content: ");
                 for (int i = 0; i < buffer.length; i++) {
                     System.out.print((char) buffer[i]); // this also prints old information from the array (see page 422 in the book -> orange)
                 }

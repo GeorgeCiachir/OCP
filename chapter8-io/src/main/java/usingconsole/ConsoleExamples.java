@@ -4,11 +4,11 @@ import java.io.Console;
 
 /**
  * java.io.Console doesn't work from/with IntelliJ
- * System.console() will return null in IJ
+ * System.console() will return null in IntelliJ
  *
  * For this to work
  * 1. compile it -> javac ConsoleExamples.java
- * 2. run it with java -> java usingconsole.ConsoleExamplesK
+ * 2. run it with java -> java usingconsole.ConsoleExamples
  */
 public class ConsoleExamples {
 

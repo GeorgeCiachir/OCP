@@ -14,19 +14,24 @@ public class ObjectInputStreamReadAndOutputStreamsReadWriteExamples {
         }
         animalsFile.createNewFile();
 
-        Animal michael = new Animal("Tiger Michael", 26, 'T', "staticValue michael", " transientValue michael");
-        Animal gina = new Animal("Elephant Gina", 21, 'E', "staticValue gina", "transientValue gina");
+        Animal michael = new Animal("Tiger Michael", 26, "fast creature", "staticValue michael", " transientValue michael");
+        Animal gina = new Animal("Elephant Gina", 21, "slowCreature", "staticValue gina", "transientValue gina");
         List<Animal> written = new ArrayList<>();
         written.add(michael);
         written.add(gina);
         written.add(null);
+
         writeAnimals(animalsFile, written);
-
-        List<Animal> read = getAnimals(animalsFile);
-        System.out.println(read);
-
+        getAnimals(animalsFile).forEach(System.out::println);
     }
 
+    private static void writeAnimals(File file, List<Animal> animals) throws IOException {
+        try (ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+            for (Animal animal : animals) {
+                os.writeObject(animal);
+            }
+        }
+    }
 
     private static List<Animal> getAnimals(File file) throws IOException, ClassNotFoundException {
         List<Animal> animals = new ArrayList<>();
@@ -34,7 +39,7 @@ public class ObjectInputStreamReadAndOutputStreamsReadWriteExamples {
         try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
             while (true) {
                 Object read = is.readObject();
-                // Attention here ! null object can also be written, so calling instanceof is essentially filtering out the null objects
+                // Attention here ! null object can also be written, so calling instanceof is basically filtering out the null objects
                 if (read instanceof Animal) {
                     animals.add((Animal) read);
                 }
@@ -44,14 +49,5 @@ public class ObjectInputStreamReadAndOutputStreamsReadWriteExamples {
         }
 
         return animals;
-    }
-
-
-    private static void writeAnimals(File file, List<Animal> animals) throws IOException {
-        try (ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-            for (Animal animal : animals) {
-                os.writeObject(animal);
-            }
-        }
     }
 }
