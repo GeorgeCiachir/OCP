@@ -10,7 +10,6 @@ public class FileExamples {
         operationsWithAFileInMemory();
         operationsWithAnActualFile();
         operationsWithAnActualDirectory();
-
     }
 
     private static void operationsWithAFileInMemory() {

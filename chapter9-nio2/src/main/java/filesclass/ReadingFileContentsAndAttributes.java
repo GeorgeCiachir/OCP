@@ -1,4 +1,4 @@
-package usingfilesclass;
+package filesclass;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +24,6 @@ public class ReadingFileContentsAndAttributes {
         BasicFileAttributeView basicFileAttributeView = Files.getFileAttributeView(someFile, BasicFileAttributeView.class);
         System.out.println(basicFileAttributeView.readAttributes().isOther());
     }
-
 
     /*
      * Careful with this one because it stores all the contents of the file in memory
