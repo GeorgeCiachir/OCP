@@ -11,18 +11,25 @@ import java.util.List;
 public class ReadingFileContentsAndAttributes {
 
     public static void main(String[] args) throws IOException {
-//        usingBufferedReaderAndBufferedWriter();
-//        readAllLines();
         readingFileAttributes();
+//        readAllLines();
+//        usingBufferedReaderAndBufferedWriter();
 
     }
 
     private static void readingFileAttributes() throws IOException {
         Path someFile = Paths.get("somefile.txt");
+
+        if (!Files.exists(someFile)) {
+            Files.createFile(someFile);
+        }
         BasicFileAttributes basicFileAttributes = Files.readAttributes(someFile, BasicFileAttributes.class);
+        System.out.println(basicFileAttributes);
         System.out.println(basicFileAttributes.isRegularFile());
         BasicFileAttributeView basicFileAttributeView = Files.getFileAttributeView(someFile, BasicFileAttributeView.class);
         System.out.println(basicFileAttributeView.readAttributes().isOther());
+
+        Files.deleteIfExists(someFile);
     }
 
     /*

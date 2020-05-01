@@ -15,10 +15,10 @@ public class TraversingExamples {
     private static final Path LOCAL_ROOT = Paths.get("");
 
     public static void main(String[] args) throws IOException {
+        readFileContents();
+//        listCurrentDirContents();
 //        walkDir();
 //        findPaths();
-//        listCurrentDirContents();
-        readFileContents();
     }
 
     private static void readFileContents() throws IOException {
@@ -29,6 +29,8 @@ public class TraversingExamples {
 
         Files.lines(thisActualFile)
                 .forEach(System.out::println);
+        Files.readAllLines(thisActualFile)
+                .forEach(System.out::println);
 
     }
 
@@ -37,8 +39,6 @@ public class TraversingExamples {
                 .filter(p -> !Files.isDirectory(p))
                 .map(Path::toAbsolutePath)
                 .forEach(System.out::println);
-
-
     }
 
     private static void walkDir() {
