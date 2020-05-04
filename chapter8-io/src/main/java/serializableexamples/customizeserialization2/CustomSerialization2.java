@@ -1,10 +1,10 @@
-package serializableexamples.customizeserialization;
+package serializableexamples.customizeserialization2;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomSerialization {
+public class CustomSerialization2 {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         File studentsFile = new File("students.txt");
@@ -14,7 +14,7 @@ public class CustomSerialization {
         }
         studentsFile.createNewFile();
 
-        Student michael = new Student("Michael", 26);
+        Student michael = new Student("Michael", 26, new Address("Bucharest"));
         List<Student> students = new ArrayList<>();
         students.add(michael);
 
@@ -34,8 +34,7 @@ public class CustomSerialization {
         try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
             while (true) {
                 Object read = is.readObject();
-                System.out.println("Apparently this is a: " + read.getClass());
-                System.out.println(read);
+                System.out.println("Read: " + read);
             }
         } catch (EOFException eof) {
         }

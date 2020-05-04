@@ -26,8 +26,7 @@ public class Student implements Serializable {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         Object readValue = in.readObject();
-        System.out.println("Deserializing: " + readValue.getClass());
-        System.out.println(readValue);
+        System.out.println("Deserializing: " + readValue.getClass() + " : " + readValue);
     }
 
     @Override
