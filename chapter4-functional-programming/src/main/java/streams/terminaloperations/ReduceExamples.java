@@ -23,7 +23,7 @@ public class ReduceExamples {
      */
     private void firstMethodSignature() {
         Integer sum = Stream.iterate(1, i -> i + 1)
-                .peek(i -> System.out.println(i))
+                .peek(System.out::println)
                 .limit(3)
                 .reduce(0, Integer::sum);
         System.out.println(sum);
@@ -43,13 +43,12 @@ public class ReduceExamples {
     private void secondMethodSignature() {
         Stream.iterate(1, i -> i + 1)
                 .limit(3)
-                .mapToInt(e -> e)
-                .reduce((first, second) -> first + second)
-                .ifPresent(value -> System.out.println(value));
+                .reduce(Integer::sum)
+                .ifPresent(System.out::println);
 
         Stream.of("this", " ", "has", " ", "been", " ", "concatenated")
                 .reduce(String::concat)
-                .ifPresent(value -> System.out.println(value));
+                .ifPresent(System.out::println);
     }
 
     /**

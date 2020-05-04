@@ -20,7 +20,6 @@ public class CollectExamples {
         collectManually();
         collectUsingLocallyDefinedCollector();
         collectUsingMyOwnCustomCollector();
-
     }
 
     /**
@@ -28,7 +27,7 @@ public class CollectExamples {
      */
     private static void collectManually() {
         // When the stream is simple (not parallel) the combiner is no longer executed
-        // just comment the .parallel() line
+        // just comment the .parallel() line or add .sequential() after the .parallel() line
         ArrayList<Integer> collectedValues = Stream.iterate(1, i -> i + 1)
                 .parallel()
                 .limit(10)
@@ -45,7 +44,6 @@ public class CollectExamples {
      */
     private static void collectUsingLocallyDefinedCollector() {
         Collector<Integer, List<Integer>, List<Integer>> collector = new Collector<Integer, List<Integer>, List<Integer>>() {
-
 
             @Override
             public Supplier<List<Integer>> supplier() {

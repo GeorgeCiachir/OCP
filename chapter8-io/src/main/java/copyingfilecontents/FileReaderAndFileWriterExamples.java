@@ -5,8 +5,8 @@ import java.io.*;
 public class FileReaderAndFileWriterExamples {
 
     public static void main(String[] args) throws IOException {
-        copyAndWriteWithFileReaderAndWriter();
         copyAndWriteWithBufferedReaderAndWriter();
+        copyAndWriteWithFileReaderAndWriter();
     }
 
     private static void copyAndWriteWithBufferedReaderAndWriter() throws IOException {
@@ -23,6 +23,16 @@ public class FileReaderAndFileWriterExamples {
                 bw.write(line);
                 bw.newLine();
             }
+
+            //same thing, reading all lines as a stream
+            br.lines().forEach(lineRead -> {
+                try {
+                    bw.write(lineRead);
+                    bw.newLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
