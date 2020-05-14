@@ -14,7 +14,7 @@ public class ConsoleExamples {
 
     public static void main(String[] args) {
         Console console = System.console();
-
+//stuff
         if (console == null) {
             System.out.println("Console is null");
             return;
