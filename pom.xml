@@ -24,8 +24,8 @@
         <module>chapter8-io</module>
         <module>chapter9-nio2</module>
         <module>chapter10-jdbc</module>
-		<module>ocp11-chapter11-oca-modules</module>
-		<module>ocp11-chapter6-ocp-modules</module>
+		<module>ocp11-modules-chapter11-oca</module>
+		<module>ocp11-modules-chapter6-ocp</module>
 	</modules>
 
 
