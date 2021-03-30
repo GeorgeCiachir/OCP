@@ -1,0 +1,44 @@
+
+************************* Compile and jar the feeding module *************************
+
+javac -p mods -d compiled/feeding ^
+    feeding/zoo/animal/feeding/*.java ^
+    feeding/module-info.java
+
+jar -cvf mods/zoo.animal.feeding.jar -C compiled/feeding/ .
+
+
+************************* Compile and jar the care module *************************
+
+javac -p mods -d compiled/care ^
+    care/zoo/animal/care/details/*.java ^
+    care/zoo/animal/care/medical/*.java ^
+    care/module-info.java
+
+jar -cvf mods/zoo.animal.care.jar -C compiled/care/ .
+
+
+************************* Compile and jar the talks module *************************
+
+javac -p mods -d compiled/talks ^
+    talks/zoo/animal/talks/content/*.java ^
+    talks/zoo/animal/talks/media/*.java ^
+    talks/zoo/animal/talks/schedule/*.java ^
+    talks/module-info.java
+
+javac -p mods -d compiled/talks ^
+    talks/zoo/animal/talks/content/* ^
+    talks/zoo/animal/talks/media/* ^
+    talks/zoo/animal/talks/schedule/* ^
+    talks/module-info.java
+
+jar -cvf mods/zoo.animal.talks.jar -C compiled/talks/ .
+
+
+************************* Compile and jar the staff module *************************
+
+javac -p mods -d compiled/staff ^
+    staff/zoo/staff/*.java ^
+    staff/module-info.java
+
+jar -cvf mods/zoo.staff.jar -C compiled/staff/ .
