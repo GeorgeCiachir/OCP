@@ -25,6 +25,7 @@
         <module>chapter9-nio2</module>
         <module>chapter10-jdbc</module>
 		<module>ocp11-chapter11-oca-modules</module>
+		<module>ocp11-chapter6-ocp-modules</module>
 	</modules>
 
 
