@@ -6,7 +6,16 @@ javac -p mods -d compiled/feeding ^
     feeding/module-info.java
 
 jar -cvf mods/zoo.animal.feeding.jar -C compiled/feeding/ .
+jar -c -v -f mods/zoo.animal.feeding.jar -C compiled/feeding/ .
+jar --create --verbose --file mods/zoo.animal.feeding.jar -C compiled/feeding/ .
 
+************************* Run the Task main method in the feeding module *************************
+
+run the class from the inside of the jar
+java --module-path mods --module zoo.animal.feeding/zoo.animal.feeding.Task
+
+run the class from the folder where it is compiled
+java --module-path compiled/feeding --module zoo.animal.feeding/zoo.animal.feeding.Task
 
 ************************* Compile and jar the care module *************************
 
@@ -42,3 +51,64 @@ javac -p mods -d compiled/staff ^
     staff/module-info.java
 
 jar -cvf mods/zoo.staff.jar -C compiled/staff/ .
+
+
+************************* Describe a module *************************
+
+java -p mods -d zoo.staff
+java -p mods --describe-module zoo.staff
+
+java -p mods -d zoo.animal.care
+java -p mods -d zoo.animal.care
+
+
+java -p "C:\Program Files\Java\java-11-openjdk-11.0.9.11-3.windows.redhat.x86_64\jmods" ^
+    -d java.base
+
+************************* List the available modules *************************
+list all the java modules (70 modules in Java 11)
+java --list-modules
+
+list modules from a given location -> it includes all the java modules, so in this case,
+a total of 74 modules will be listed, with the absolute path for our custom ones
+java -p mods --list-modules
+
+java -p "C:\Program Files\Java\java-11-openjdk-11.0.9.11-3.windows.redhat.x86_64\jmods" --list-modules
+
+
+************************* Show module resolution *************************
+list the info the, runs the main method on the specified class (Task in this case)
+
+java --show-module-resolution ^
+    -p compiled/feeding ^
+    -m zoo.animal.feeding/zoo.animal.feeding.Task
+
+************************* The jar command *************************
+
+It will describe a module, just like the "java -p mods -d zoo.staff" command, but it includes the /!module-info.class
+in the full path name
+
+jar -f mods/zoo.animal.feeding.jar -d
+jar --file mods/zoo.animal.feeding.jar --describe-module
+
+************************* The jdeps command *************************
+Full form
+jdeps mods/zoo.animal.feeding.jar
+
+Short form, using the summary option
+jdeps -s mods/zoo.animal.feeding.jar
+jdeps -summary mods/zoo.animal.feeding.jar
+
+
+jdeps --module-path mods mods/zoo.animal.care.jar
+
+************************* The jmod command *************************
+
+java -p "C:\Program Files\Java\java-11-openjdk-11.0.9.11-3.windows.redhat.x86_64\jmods" --list-modules
+java -p foo --list-modules
+
+jmod describe "C:\Program Files\Java\java-11-openjdk-11.0.9.11-3.windows.redhat.x86_64\jmods\java.base.jmod"
+jmod describe foo/java.base.jmod
+
+mod hash foo/java.base.jmod
+jmod extract foo/java.base.jmod
