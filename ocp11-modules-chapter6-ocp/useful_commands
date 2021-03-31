@@ -1,0 +1,26 @@
+
+************************* The jdeps command *************************
+Full form
+jdeps zoo.dino.jar
+
+Short form, using the summary option
+jdeps -s zoo.dino.jar
+
+jdeps --jdk-internals zoo.dino.jar
+jdeps -jdkinternals zoo.dino.jar
+
+
+************************* Identify cyclic dependencies *************************
+
+javac -p mods -d compiled/butterflyModule ^
+    butterflyModule/zoo/butterfly/*.java ^
+    butterflyModule/module-info.java
+
+jar -cvf mods/zoo.butterfly.jar -C compiled/butterflyModule/ .
+
+
+javac -p mods -d compiled/caterpillarModule ^
+    caterpillarModule/zoo/caterpillar/*.java ^
+    caterpillarModule/module-info.java
+
+jar -cvf mods/zoo.caterpillar.jar -C compiled/caterpillarModule/ .
