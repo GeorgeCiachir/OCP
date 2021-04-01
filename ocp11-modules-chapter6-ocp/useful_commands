@@ -54,3 +54,23 @@ javac -p mods -d compiled/consumerModule ^
 jar -cvf mods/zoo.visitor.jar -C compiled/consumerModule/ .
 
 java -p mods -m zoo.visitor/zoo.visitor.Tourist
+
+***** ServiceProviderModule *****
+
+javac -p mods -d compiled/serviceProviderModule ^
+    serviceProviderModule/zoo/tours/agency/*.java ^
+    serviceProviderModule/*.java
+
+jar -cvf mods/zoo.tours.agency.jar -C compiled/serviceProviderModule/ .
+
+
+***** MultiPurposeModule *****
+
+javac -p mods -d compiled/multiPurposeModule ^
+    multiPurposeModule/zoo/tours/hybrid/*.java ^
+    multiPurposeModule/*.java
+
+jar -cvf mods/zoo.tours.hybrid.jar -C compiled/multiPurposeModule/ .
+
+java -p mods -m zoo.tours.hybrid/zoo.tours.hybrid.TourLengthCheck
+
