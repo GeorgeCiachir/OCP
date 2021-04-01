@@ -74,3 +74,4 @@ jar -cvf mods/zoo.tours.hybrid.jar -C compiled/multiPurposeModule/ .
 
 java -p mods -m zoo.tours.hybrid/zoo.tours.hybrid.TourLengthCheck
 
+jdeps --module-path mods mods/zoo.tours.hybrid.jar
