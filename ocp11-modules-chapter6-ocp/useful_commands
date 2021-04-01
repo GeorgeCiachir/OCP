@@ -24,3 +24,33 @@ javac -p mods -d compiled/caterpillarModule ^
     caterpillarModule/module-info.java
 
 jar -cvf mods/zoo.caterpillar.jar -C compiled/caterpillarModule/ .
+
+
+************************* Creating services *************************
+
+***** ServiceProviderInterfaceModule *****
+
+javac -p mods -d compiled/serviceProviderInterfaceModule ^
+    serviceProviderInterfaceModule/zoo/tours/api/*.java ^
+    serviceProviderInterfaceModule/*.java
+
+jar -vcf mods/zoo.tours.api.jar -C compiled/serviceProviderInterfaceModule/ .
+
+
+***** ServiceLocatorModule *****
+
+javac -p mods -d compiled/serviceLocatorModule ^
+    serviceLocatorModule/zoo/tours/reservations/*.java ^
+    serviceLocatorModule/*.java
+
+jar -cvf mods/zoo.tours.reservations.jar -C compiled/serviceLocatorModule .
+
+***** ConsumerModule *****
+
+javac -p mods -d compiled/consumerModule ^
+    consumerModule/zoo/visitor/*.java ^
+    consumerModule/*.java
+
+jar -cvf mods/zoo.visitor.jar -C compiled/consumerModule/ .
+
+java -p mods -m zoo.visitor/zoo.visitor.Tourist
