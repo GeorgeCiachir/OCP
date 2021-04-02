@@ -1,4 +1,4 @@
-package manuallycreatingthreads;
+package threadbasics;
 
 public class CreatingThreadsExamples extends Thread {
 
