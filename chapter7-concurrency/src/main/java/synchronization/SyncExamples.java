@@ -18,9 +18,9 @@ public class SyncExamples {
     private void firstManuallySyncOnClassNameMethod() throws InterruptedException {
         synchronized (SyncExamples.class) {
             System.out.println("First method; entering thread: " + Thread.currentThread().getName());
-            System.out.println("first method acquired lock");
+            System.out.println("First method acquired lock");
             Thread.sleep(3000);
-            System.out.println("first method releasing lock");
+            System.out.println("First method releasing lock");
             System.out.println();
             System.out.println("*****************************");
             System.out.println();
@@ -52,9 +52,9 @@ public class SyncExamples {
     private void firstManuallySyncMethod() throws InterruptedException {
         synchronized (this) {
             System.out.println("First method; entering thread: " + Thread.currentThread().getName());
-            System.out.println("first method acquired lock");
+            System.out.println("First method acquired lock");
             Thread.sleep(3000);
-            System.out.println("first method releasing lock");
+            System.out.println("First method releasing lock");
             System.out.println();
             System.out.println("*****************************");
             System.out.println();
@@ -85,9 +85,9 @@ public class SyncExamples {
 //        oneMethodSyncAnotherUnsyncExample();
 //        threeMethodsSyncOnTheSameInstanceExample();
 //        twoMethodsSyncOnDifferentInstancesExample();
-//        threeMethodsSyncOnClassNameEvenThoughDifferentInstances();
+        threeMethodsSyncOnClassNameEvenThoughDifferentInstances();
 //        waitMethodOnANonMonitor();
-        becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance();
+//        becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance();
     }
 
     private static void oneMethodSyncAnotherUnsyncExample() {
@@ -166,6 +166,11 @@ public class SyncExamples {
 
         service.submit(() -> {
             thirdInstance.simpleSyncOnClassNameMethod();
+            return 2;
+        });
+
+        service.submit(() -> {
+            SyncExamples.simpleSyncOnClassNameMethod();
             return 2;
         });
 
