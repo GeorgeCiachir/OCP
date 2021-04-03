@@ -12,65 +12,37 @@ import java.util.stream.Stream;
 public class ParallelStreamsExamples {
 
     public static void main(String[] args) {
+        createParallelStream();
 //        orderingAStream();
 //        usingOrderedOperationsOnParallelStreamsProducesTheSameEffectAsWithASerialStream();
 //        usingOrderedOperationsOnAnUnorderedStream();
 //        useReduce();
 //        useCollect();
-        createParallelStream();
     }
 
-    private static void useCollect() {
-        Map<Integer, String> result = Arrays.asList("lions", "tigers", "bears")
-                .parallelStream()
-                .collect(Collectors.toConcurrentMap(String::length, k -> k, (v1, v2) -> v1 + " , " + v2));
-        System.out.println(result);
+    private static void createParallelStream() {
+        Stream<Integer> stream1 = List.of(1).stream();
+        Stream<Integer> stream2 = stream1.parallel();
+        System.out.println(stream1 == stream2); //true
+        System.out.println(stream1.isParallel()); //true
+        System.out.println(Stream.of(1, 2, 3).parallel().isParallel()); //true
 
-        Map<Integer, List<String>> secondResult = Arrays.asList("lions", "tigers", "bears")
-                .parallelStream()
-                .collect(Collectors.groupingBy(String::length));
-        System.out.println(secondResult);
-
-        Map<Integer, Set<String>> thirdResult = Arrays.asList("lions", "tigers", "bears")
-                .parallelStream()
-                .collect(Collectors.groupingBy(String::length, Collectors.toSet()));
-        System.out.println(thirdResult);
-    }
-
-    private static void useReduce() {
-        String result = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
-                .stream()
-                .reduce("", (str, ch) -> str + ch, (str1, str2) -> str1 + str2);
-        System.out.println(result);
-
-        result = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
-                .parallelStream()
-                .reduce("", (str, ch) -> str + ch, (str1, str2) -> str1 + str2);
-        System.out.println(result);
-    }
+        //if one of the streams if parallel, the concatenation is also a parallel stream
+        Stream<Integer> concat = Stream.concat(Stream.of(1, 2).parallel(), Stream.of(3, 4));
+        System.out.println(concat.isParallel()); //true
 
 
-    private static void usingOrderedOperationsOnAnUnorderedStream() {
-        List<Integer> list = new ArrayList<>(Arrays.asList(1, 9, 15, 44, 32, 66, 99, 5, 4, 3, 2));
+        List<List<String>> lists1 = new ArrayList<>();
+        boolean isParallel = lists1.parallelStream()
+                .flatMap(l -> l.stream())
+                .isParallel();
+        System.out.println(isParallel); //true -> flat map returns a parallel stream only if the top-level stream is parallel
 
-        Integer integer = list.stream().unordered()
-                .parallel()
-                .skip(3)
-                .findFirst()
-                .get();
-        System.out.println(integer);
-
-    }
-
-    private static void usingOrderedOperationsOnParallelStreamsProducesTheSameEffectAsWithASerialStream() {
-        List<Integer> list = new ArrayList<>(Arrays.asList(1, 5, 4, 3, 2));
-
-        Integer integer = list.parallelStream()
-                .skip(2)
-                .limit(2)
-                .findFirst()
-                .get();
-        System.out.println(integer);
+        List<List<String>> lists2 = new ArrayList<>();
+        isParallel = lists2.stream()
+                .flatMap(l -> l.parallelStream())
+                .isParallel();
+        System.out.println(isParallel); //false -> flat map returns a parallel stream only if the top-level stream is parallel
     }
 
     private static void orderingAStream() {
@@ -130,28 +102,56 @@ public class ParallelStreamsExamples {
         System.out.println();
     }
 
-    private static void createParallelStream() {
-        Stream<Integer> stream1 = List.of(1).stream();
-        Stream<Integer> stream2 = stream1.parallel();
-        System.out.println(stream1 == stream2); //true
-        System.out.println(stream1.isParallel()); //true
-        System.out.println(Stream.of(1, 2, 3).parallel().isParallel()); //true
 
-        //if one of the streams if parallel, the concatenation is also a parallel stream
-        Stream<Integer> concat = Stream.concat(Stream.of(1, 2).parallel(), Stream.of(3, 4));
-        System.out.println(concat.isParallel()); //true
+    private static void usingOrderedOperationsOnParallelStreamsProducesTheSameEffectAsWithASerialStream() {
+        List<Integer> list = new ArrayList<>(Arrays.asList(1, 5, 4, 3, 2));
 
+        Integer integer = list.parallelStream()
+                .skip(2)
+                .limit(2)
+                .findFirst()
+                .get();
+        System.out.println(integer);
+    }
 
-        List<List<String>> lists1 = new ArrayList<>();
-        boolean isParallel = lists1.parallelStream()
-                .flatMap(l -> l.stream())
-                .isParallel();
-        System.out.println(isParallel); //true -> flat map returns a parallel stream only if the top-level stream is parallel
+    private static void usingOrderedOperationsOnAnUnorderedStream() {
+        List<Integer> list = new ArrayList<>(Arrays.asList(1, 9, 15, 44, 32, 66, 99, 5, 4, 3, 2));
 
-        List<List<String>> lists2 = new ArrayList<>();
-        isParallel = lists2.stream()
-                .flatMap(l -> l.parallelStream())
-                .isParallel();
-        System.out.println(isParallel); //false -> flat map returns a parallel stream only if the top-level stream is parallel
+        Integer integer = list.stream().unordered()
+                .parallel()
+                .skip(3)
+                .findFirst()
+                .get();
+        System.out.println(integer);
+
+    }
+
+    private static void useReduce() {
+        String result = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
+                .stream()
+                .reduce("", (str, ch) -> str + ch, (str1, str2) -> str1 + str2);
+        System.out.println(result);
+
+        result = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
+                .parallelStream()
+                .reduce("", (str, ch) -> str + ch, (str1, str2) -> str1 + str2);
+        System.out.println(result);
+    }
+
+    private static void useCollect() {
+        Map<Integer, String> result = Arrays.asList("lions", "tigers", "bears")
+                .parallelStream()
+                .collect(Collectors.toConcurrentMap(String::length, k -> k, (v1, v2) -> v1 + " , " + v2));
+        System.out.println(result);
+
+        Map<Integer, List<String>> secondResult = Arrays.asList("lions", "tigers", "bears")
+                .parallelStream()
+                .collect(Collectors.groupingBy(String::length));
+        System.out.println(secondResult);
+
+        Map<Integer, Set<String>> thirdResult = Arrays.asList("lions", "tigers", "bears")
+                .parallelStream()
+                .collect(Collectors.groupingBy(String::length, Collectors.toSet()));
+        System.out.println(thirdResult);
     }
 }
