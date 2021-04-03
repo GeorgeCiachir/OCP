@@ -12,7 +12,7 @@ public class Fox {
     }
 
     private void goToTheOtherBowl() {
-        System.out.println(name + " going to the other bowl. It will take approx. 100 ms");
+        System.out.println(name + " wants to go to the other bowl. It should take approx. 100 ms");
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
