@@ -87,7 +87,7 @@ public class SyncExamples {
 //        twoMethodsSyncOnDifferentInstancesExample();
 //        threeMethodsSyncOnClassNameEvenThoughDifferentInstances();
 //        waitMethodOnANonMonitor();
-        becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance();
+        becauseSyncIsDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance();
     }
 
     private static void oneMethodSyncAnotherUnsyncExample() {
@@ -206,7 +206,7 @@ public class SyncExamples {
     /*
      * What I want to say is that in this case, the synchronizations don't interfere
      */
-    private static void becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance() {
+    private static void becauseSyncIsDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance() {
         ExecutorService service = Executors.newFixedThreadPool(2);
         SyncExamples firstInstance = new SyncExamples();
         SyncExamples secondInstance = new SyncExamples();
