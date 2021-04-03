@@ -36,10 +36,10 @@ public class WeighAnimalsAction extends RecursiveAction {
         int start = 0;
         int end = 10;
         double[] weights = new double[end];
-        WeighAnimalsAction task = new WeighAnimalsAction(weights, start, end);
+        WeighAnimalsAction action = new WeighAnimalsAction(weights, start, end);
 
         ForkJoinPool pool = new ForkJoinPool();
-        pool.invoke(task);
+        Void invoke = pool.invoke(action);
 
         System.out.println("********");
         System.out.println("Weights: ");

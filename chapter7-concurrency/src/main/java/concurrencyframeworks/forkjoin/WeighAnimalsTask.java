@@ -7,11 +7,11 @@ import java.util.concurrent.RecursiveTask;
 
 public class WeighAnimalsTask extends RecursiveTask<Double> {
 
-    private int start;
-    private int end;
-    private Double[] weights;
+    private final int start;
+    private final int end;
+    private final double[] weights;
 
-    public WeighAnimalsTask(Double[] weights, int start, int end) {
+    public WeighAnimalsTask(double[] weights, int start, int end) {
         this.start = start;
         this.end = end;
         this.weights = weights;
@@ -19,13 +19,11 @@ public class WeighAnimalsTask extends RecursiveTask<Double> {
 
     @Override
     protected Double compute() {
-
+        System.out.println(Thread.currentThread().getName());
         if (end - start <= 3) {
             double sum = 0;
             for (int i = start; i < end; i++) {
-                weights[i] = (double) new Random().nextInt(100);
-                String message = String.format("Animal %d weighted", i);
-                System.out.println(message);
+                weights[i] = new Random().nextInt(100);
                 sum += weights[i];
             }
             return sum;
@@ -37,25 +35,22 @@ public class WeighAnimalsTask extends RecursiveTask<Double> {
             leftTask.fork();
 
             return rightTask.compute() + leftTask.join();
-
         }
     }
 
     public static void main(String[] args) {
         int start = 0;
-        int end = 10;
-        Double[] weights = new Double[end];
+        int end = 20;
+        double[] weights = new double[end];
         WeighAnimalsTask task = new WeighAnimalsTask(weights, start, end);
 
         ForkJoinPool pool = new ForkJoinPool();
         Double result = pool.invoke(task);
 
         System.out.println("Total weight: " + result);
-        Arrays.stream(weights)
-                .forEach(System.out::println);
-        double sum = Arrays.stream(weights)
-                .mapToDouble(Double::new)
-                .sum();
+
+        //double check the result
+        double sum = Arrays.stream(weights).sum();
         System.out.println(sum);
     }
 }
