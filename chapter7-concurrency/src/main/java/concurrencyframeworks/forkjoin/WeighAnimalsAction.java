@@ -7,11 +7,11 @@ import java.util.concurrent.RecursiveAction;
 
 public class WeighAnimalsAction extends RecursiveAction {
 
-    private int start;
-    private int end;
-    private Double[] weights;
+    private final int start;
+    private final int end;
+    private final double[] weights;
 
-    public WeighAnimalsAction(Double[] weights, int start, int end) {
+    public WeighAnimalsAction(double[] weights, int start, int end) {
         this.start = start;
         this.end = end;
         this.weights = weights;
@@ -22,7 +22,7 @@ public class WeighAnimalsAction extends RecursiveAction {
 
         if (end - start <= 3) {
             for (int i = start; i < end; i++) {
-                weights[i] = (double) new Random().nextInt(100);
+                weights[i] = new Random().nextInt(100);
                 String message = String.format("Animal %d weighted", i);
                 System.out.println(message);
             }
@@ -35,13 +35,14 @@ public class WeighAnimalsAction extends RecursiveAction {
     public static void main(String[] args) {
         int start = 0;
         int end = 10;
-        Double[] weights = new Double[end];
+        double[] weights = new double[end];
         WeighAnimalsAction task = new WeighAnimalsAction(weights, start, end);
 
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(task);
 
-
+        System.out.println("********");
+        System.out.println("Weights: ");
         Arrays.stream(weights)
                 .forEach(System.out::println);
     }
