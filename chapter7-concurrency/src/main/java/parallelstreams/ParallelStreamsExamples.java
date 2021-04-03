@@ -1,7 +1,13 @@
 package parallelstreams;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ParallelStreamsExamples {
 
@@ -10,7 +16,8 @@ public class ParallelStreamsExamples {
 //        usingOrderedOperationsOnParallelStreamsProducesTheSameEffectAsWithASerialStream();
 //        usingOrderedOperationsOnAnUnorderedStream();
 //        useReduce();
-        useCollect();
+//        useCollect();
+        createParallelStream();
     }
 
     private static void useCollect() {
@@ -121,5 +128,30 @@ public class ParallelStreamsExamples {
                 .parallel()
                 .forEachOrdered(value -> System.out.print(value + " "));
         System.out.println();
+    }
+
+    private static void createParallelStream() {
+        Stream<Integer> stream1 = List.of(1).stream();
+        Stream<Integer> stream2 = stream1.parallel();
+        System.out.println(stream1 == stream2); //true
+        System.out.println(stream1.isParallel()); //true
+        System.out.println(Stream.of(1, 2, 3).parallel().isParallel()); //true
+
+        //if one of the streams if parallel, the concatenation is also a parallel stream
+        Stream<Integer> concat = Stream.concat(Stream.of(1, 2).parallel(), Stream.of(3, 4));
+        System.out.println(concat.isParallel()); //true
+
+
+        List<List<String>> lists1 = new ArrayList<>();
+        boolean isParallel = lists1.parallelStream()
+                .flatMap(l -> l.stream())
+                .isParallel();
+        System.out.println(isParallel); //true -> flat map returns a parallel stream only if the top-level stream is parallel
+
+        List<List<String>> lists2 = new ArrayList<>();
+        isParallel = lists2.stream()
+                .flatMap(l -> l.parallelStream())
+                .isParallel();
+        System.out.println(isParallel); //false -> flat map returns a parallel stream only if the top-level stream is parallel
     }
 }
