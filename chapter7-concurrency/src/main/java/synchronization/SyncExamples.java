@@ -85,9 +85,9 @@ public class SyncExamples {
 //        oneMethodSyncAnotherUnsyncExample();
 //        threeMethodsSyncOnTheSameInstanceExample();
 //        twoMethodsSyncOnDifferentInstancesExample();
-        threeMethodsSyncOnClassNameEvenThoughDifferentInstances();
+//        threeMethodsSyncOnClassNameEvenThoughDifferentInstances();
 //        waitMethodOnANonMonitor();
-//        becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance();
+        becauseSyncIdDoneOnDifferentMonitorsSyncOnClassIsDifferentThanSyncOnInstance();
     }
 
     private static void oneMethodSyncAnotherUnsyncExample() {
@@ -108,7 +108,7 @@ public class SyncExamples {
     }
 
     /*
-     * Because the 2 methods sync on the instance, they will execute in sync, one after another
+     * Because the 3 methods sync on the instance, they will execute in sync, one after another
      * The result is the same if the sync is done manually on the instance object, or using the synchronized keyword on the method's signature
      */
     private static void threeMethodsSyncOnTheSameInstanceExample() {
