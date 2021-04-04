@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -170,6 +171,11 @@ public class ParallelStreamsExamples {
     }
 
     private static void useCollect() {
+        Set<String> manualCollect = Arrays.asList("lions", "tigers", "bears")
+                .parallelStream()
+                .collect(ConcurrentSkipListSet::new, Set::add, Set::addAll);
+        System.out.println(manualCollect);
+
         Map<Integer, String> result = Arrays.asList("lions", "tigers", "bears")
                 .parallelStream()
                 .collect(Collectors.toConcurrentMap(String::length, k -> k, (v1, v2) -> v1 + " , " + v2));
@@ -177,12 +183,18 @@ public class ParallelStreamsExamples {
 
         Map<Integer, List<String>> secondResult = Arrays.asList("lions", "tigers", "bears")
                 .parallelStream()
-                .collect(Collectors.groupingBy(String::length));
+                .collect(Collectors.groupingByConcurrent(String::length));
         System.out.println(secondResult);
 
         Map<Integer, Set<String>> thirdResult = Arrays.asList("lions", "tigers", "bears")
                 .parallelStream()
-                .collect(Collectors.groupingBy(String::length, Collectors.toSet()));
+                .collect(Collectors.groupingByConcurrent(String::length, Collectors.toSet()));
         System.out.println(thirdResult);
+
+
+        List<String> listResult = Stream.of("d", "a", "b", "c", "e", "f", "g", "h", "i", "j", "k", "l")
+                .parallel()
+                .collect(Collectors.toList());
+        System.out.println(listResult);
     }
 }
