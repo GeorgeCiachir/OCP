@@ -12,12 +12,12 @@ import java.util.stream.Stream;
 public class ParallelStreamsExamples {
 
     public static void main(String[] args) {
-        createParallelStream();
+//        createParallelStream();
 //        orderingAStream();
 //        usingOrderedOperationsOnParallelStreamsProducesTheSameEffectAsWithASerialStream();
 //        usingOrderedOperationsOnAnUnorderedStream();
 //        useReduce();
-//        useCollect();
+        useCollect();
     }
 
     private static void createParallelStream() {
@@ -104,37 +104,68 @@ public class ParallelStreamsExamples {
 
 
     private static void usingOrderedOperationsOnParallelStreamsProducesTheSameEffectAsWithASerialStream() {
-        List<Integer> list = new ArrayList<>(Arrays.asList(1, 5, 4, 3, 2));
-
-        Integer integer = list.parallelStream()
+        List.of(1, 5, 4, 3, 2)
+                .parallelStream()
                 .skip(2)
                 .limit(2)
                 .findFirst()
-                .get();
-        System.out.println(integer);
+                .ifPresent(System.out::println);
     }
 
     private static void usingOrderedOperationsOnAnUnorderedStream() {
-        List<Integer> list = new ArrayList<>(Arrays.asList(1, 9, 15, 44, 32, 66, 99, 5, 4, 3, 2));
-
-        Integer integer = list.stream().unordered()
+        List.of(1, 9, 15, 44, 32, 66, 99, 5, 4, 3, 2)
+                .stream()
+                .unordered()
                 .parallel()
                 .skip(3)
                 .findFirst()
-                .get();
-        System.out.println(integer);
-
+                .ifPresent(System.out::println);
     }
 
     private static void useReduce() {
-        String result = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
+        String result = List.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l")
                 .stream()
-                .reduce("", (str, ch) -> str + ch, (str1, str2) -> str1 + str2);
+                .reduce("", (str1, str2) -> str1 + str2, (str1, str2) -> str1 + str2);
         System.out.println(result);
 
-        result = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
+        result = List.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l")
                 .parallelStream()
-                .reduce("", (str, ch) -> str + ch, (str1, str2) -> str1 + str2);
+                .reduce("", (str1, str2) -> str1 + str2, (str1, str2) -> str1 + str2);
+        System.out.println(result);
+
+        // sequential stream case:
+        // because there is no need for the combiner, it won't be used
+        // because the accumulator reverses the concatenations, the result will be in reverse
+
+        // parallel stream case:
+        // the first time the accumulator is applied is on the identity and the head of a substream
+        // so accumulator(identity, "a") and it will result in "a", no matter that it is reversed
+        // after creating the heads of the stream by applying the accumulator, from here on the combiner will be used
+
+        // subcase 1
+        // if it creates a number of substreams equal to the number of letters, then each stream combined with another
+        // will result in a stream having the letters ordered
+
+        // subcase 2
+        // if it creates a number of substreams smaller than the number of letters, the result should be unpredictable
+
+        result = List.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l")
+                .parallelStream()
+//                .stream()
+                .reduce("", (str1, str2) -> {
+                    System.out.println("Accumulating: " + str2 + str1);
+                    return str2 + str1;
+                }, (str1, str2) -> {
+                    System.out.println("Combining: " + str1 + str2);
+                    return str1 + str2;
+                });
+        System.out.println(result);
+
+        // bad identity
+        // accumulator(identity, "a") should result in "a"
+        result = List.of("w", "o", "l", "f")
+                .parallelStream()
+                .reduce("X", (str1, str2) -> str1 + str2);
         System.out.println(result);
     }
 
