@@ -35,6 +35,28 @@ public class InputStreamsAndOutputStreamsExamples {
         }
     }
 
+    private static void copyUsingSimpleISAnOS() throws IOException {
+        System.out.println();
+        System.out.println("*******************");
+        System.out.println();
+
+        File source = new File("source.txt");
+        File firstCopy = new File("firstCopy.txt");
+        if (firstCopy.exists()) {
+            firstCopy.delete();
+        }
+        firstCopy.createNewFile();
+
+        try (FileInputStream is = new FileInputStream(source);
+             OutputStream os = new FileOutputStream(firstCopy)) {
+
+            int b;
+            while ((b = is.read()) != -1) {
+                os.write(b);
+            }
+        }
+    }
+
     private static void copyUsingBISAndBOS() throws IOException {
         System.out.println();
         System.out.println("*******************");
@@ -68,28 +90,6 @@ public class InputStreamsAndOutputStreamsExamples {
                     System.out.print((char) buffer[i]); // this also prints old information from the array (see page 422 in the book -> orange)
                 }
                 System.out.println();
-            }
-        }
-    }
-
-    private static void copyUsingSimpleISAnOS() throws IOException {
-        System.out.println();
-        System.out.println("*******************");
-        System.out.println();
-
-        File source = new File("source.txt");
-        File firstCopy = new File("firstCopy.txt");
-        if (firstCopy.exists()) {
-            firstCopy.delete();
-        }
-        firstCopy.createNewFile();
-
-        try (FileInputStream is = new FileInputStream(source);
-             OutputStream os = new FileOutputStream(firstCopy)) {
-
-            int b;
-            while ((b = is.read()) != -1) {
-                os.write(b);
             }
         }
     }
