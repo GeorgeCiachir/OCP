@@ -4,7 +4,7 @@ import java.sql.*;
 
 import static dbconfig.SetupDerbyDatabase.DB_URL;
 
-public class Test {
+public class ExamplesUsingStatement {
 
     public static void main(String[] args) throws SQLException {
 
