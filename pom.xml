@@ -26,8 +26,8 @@
         <module>chapter10-jdbc</module>
 		<module>ocp11-modules-chapter11-oca</module>
 		<module>ocp11-modules-chapter6-ocp</module>
-	</modules>
-
+        <module>ocp11-security-chapter11-ocp</module>
+    </modules>
 
 	<build>
 		<plugins>
